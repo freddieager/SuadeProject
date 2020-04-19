@@ -24,12 +24,12 @@ class Command(BaseCommand):
         parser.add_argument('-p', '--path', type=str, help="Specify the data directory")
 
     def handle(self, *args, **options):
-        data_path = options.get('path', DATA_PATH)
+        data_path = options.get('path')
+        if not data_path:
+            data_path = DATA_PATH
         for model, csv_name in models_csv_mapping.items():
             logger.info(f"Loading data from {csv_name}")
             with open(os.path.join(data_path, csv_name)) as csv_file:
                 reader = csv.DictReader(csv_file)
                 for row in reader:
                     model.objects.create(**row)
-
-
