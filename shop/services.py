@@ -41,7 +41,7 @@ def get_order_data(order_queryset: models.QuerySet, vendor_queryset: models.Quer
         commission_rate = vendor_queryset.filter(vendor_id=vendor_id).get().rate
         commission_earned = commission_rate * order_line.total_amount
         commission_sum += commission_earned
-        
+
         active_promotion = promotion_queryset.filter(product_id=order_line.product_id)
         if active_promotion:
             promotion = active_promotion.get().promotion_id

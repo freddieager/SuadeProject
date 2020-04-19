@@ -1,6 +1,6 @@
 import os
 
-from rest_framework.status import HTTP_200_OK, HTTP_404_NOT_FOUND
+from rest_framework.status import HTTP_200_OK, HTTP_404_NOT_FOUND, HTTP_405_METHOD_NOT_ALLOWED
 from django.test import TestCase
 from django.core.management import call_command
 from django.urls import reverse
@@ -8,25 +8,23 @@ from django.urls import reverse
 from shop.models import *
 
 
-class ReportViewTests(TestCase):
+class AbstractBaseTestClass:
+    """ Abstract class for populating the database and getting URLs using Django reverse """
 
     @classmethod
     def setUpTestData(cls):
         test_data_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'test_data/')
         call_command('populate_data', path=test_data_path)
 
-    def get_response(self, date='2019-08-01'):
-        url = reverse('report_view', kwargs={'date': date})
-        return self.client.get(url)
+    def get_url(self, date='2019-08-01'):
+        return reverse('report_view', kwargs={'date': date})
 
-    def test_data_populated(self):
-        """ Test that the database had been populated as expected """
-        self.assertEqual(Order.objects.count(), 4)
-        self.assertEqual(OrderLine.objects.count(), 4)
-        self.assertEqual(Product.objects.count(), 3)
-        self.assertEqual(Promotion.objects.count(), 3)
-        self.assertEqual(ProductPromotion.objects.count(), 2)
-        self.assertEqual(VendorCommission.objects.count(), 2)
+    def get_response(self, date='2019-08-01'):
+        return self.client.get(self.get_url(date))
+
+
+class HTTPMethodTests(AbstractBaseTestClass, TestCase):
+    """ Tests to confirm the correct HTTP responses are given for different requests """
 
     def test_invalid_url_returns_404_NOT_FOUND(self):
         url = '/shop/report/invalid_date'
@@ -36,6 +34,34 @@ class ReportViewTests(TestCase):
     def test_valid_date_returns_200_OK(self):
         response = self.get_response()
         self.assertEqual(response.status_code, HTTP_200_OK)
+
+    def test_patch_request_returns_405_METHOD_NOT_ALLOWED(self):
+        response = self.client.patch(self.get_url())
+        self.assertEqual(response.status_code, HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_post_request_returns_405_METHOD_NOT_ALLOWED(self):
+        response = self.client.post(self.get_url())
+        self.assertEqual(response.status_code, HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_put_request_returns_405_METHOD_NOT_ALLOWED(self):
+        response = self.client.put(self.get_url())
+        self.assertEqual(response.status_code, HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_delete_request_returns_405_METHOD_NOT_ALLOWED(self):
+        response = self.client.delete(self.get_url())
+        self.assertEqual(response.status_code, HTTP_405_METHOD_NOT_ALLOWED)
+
+
+class DataValidationTests(AbstractBaseTestClass, TestCase):
+    """ Tests to confirm the data has been read in correctly and the endpoint is returning correct values for the report """
+
+    def test_data_populated(self):
+        self.assertEqual(Order.objects.count(), 4)
+        self.assertEqual(OrderLine.objects.count(), 4)
+        self.assertEqual(Product.objects.count(), 3)
+        self.assertEqual(Promotion.objects.count(), 3)
+        self.assertEqual(ProductPromotion.objects.count(), 2)
+        self.assertEqual(VendorCommission.objects.count(), 2)
 
     def test_item_total(self):
         response_data = self.get_response().json()
