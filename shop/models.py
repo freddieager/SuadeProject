@@ -1,6 +1,3 @@
-import uuid
-from datetime import datetime
-
 from django.db import models
 
 

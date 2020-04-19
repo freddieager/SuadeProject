@@ -12,15 +12,15 @@ class ReportView(View):
         "customers": 9,
         "total_discount_amount": 15152814.736907512,
         "items": 2895,
-        "order_total_avg": 15895179.735734595,
+        "order_total_avg": 15895179.735734595
         "discount_rate_avg": 0.13145131216518066,
         "commissions": {
             "promotions": {
                 "5": 1153804.8,
-                "2": 188049.40000000002
+                "2": 188049.402
             },
-            "total": 20833236.938148536,
-            "order_average": 2314804.104238726
+            "total": 20833236.93,
+            "order_average": 2314804.1042
         }
     }
 

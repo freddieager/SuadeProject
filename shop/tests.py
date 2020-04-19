@@ -1,10 +1,10 @@
 import os
-import json
 
 from rest_framework.status import HTTP_200_OK, HTTP_404_NOT_FOUND
 from django.test import TestCase
 from django.core.management import call_command
 from django.urls import reverse
+
 from shop.models import *
 
 
