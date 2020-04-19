@@ -7,7 +7,8 @@ with sample data using `python manage.py populate_data`. The shop app can be lau
 requirements installed by running `python manage.py runserver`.
 
 Included in the project is a `setup.sh` shell script which will install the necessary requirements,
-create the database, populate it with sample data, prompt the user to create an admin account and then launch the app locally.
+create the database, populate it with sample data, prompt the user to create an admin account and then launch the app
+locally. It should be run from within the SuadeProject directory.
 
 ### Requirements
 Python 3.6  
