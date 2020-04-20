@@ -53,7 +53,8 @@ class HTTPMethodTests(AbstractBaseTestClass, TestCase):
 
 
 class DataValidationTests(AbstractBaseTestClass, TestCase):
-    """ Tests to confirm the data has been read in correctly and the endpoint is returning correct values for the report """
+    """ Tests to confirm the data has been read in correctly and the endpoint is returning correct values for the
+    report """
 
     def test_data_populated(self):
         self.assertEqual(Order.objects.count(), 4)
